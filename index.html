@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>INSTIPER Yogyakarta - Praktikum Teknologi dan Mekanisasi</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- SheetJS CDN (Unduh Excel .xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col min-h-screen antialiased text-slate-800">
+
+  <!-- TOP MINIMAL NAVIGATION -->
+  <nav class="w-full max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between no-print">
+    <div class="flex items-center gap-2 text-white/95 font-serif-lora font-semibold text-xs sm:text-sm">
+      <span>🏛️ Institut Pertanian STIPER Yogyakarta</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="btn-sound-toggle" type="button" class="p-2 rounded-xl bg-white/20 hover:bg-white/30 text-white transition-colors" title="Suara Efek (Aktif / Nonaktif)">
+        <svg class="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 w-full max-w-5xl mx-auto px-4 py-4 sm:py-6 flex flex-col justify-center items-center">
+
+    <!-- 1. SCREEN: SIGN IN (PERSIS GAMBAR CONTOH - HANYA 2 TAB: PRAKTIKAN & CO.ASS) -->
+    <section id="screen-login" class="screen-fade w-full max-w-[450px] mx-auto my-auto">
+      <div class="instiper-card p-6 sm:p-8">
+        
+        <!-- HEADER LOGO INSTIPER (DARI FOTO KEDUA) -->
+        <div class="flex items-center justify-center gap-3.5 mb-5 pb-1">
+          <img src="logo-instiper.png" alt="Logo INSTIPER Yogyakarta" class="w-13 h-13 sm:w-14 sm:h-14 object-contain shrink-0">
+          <div class="text-left select-text">
+            <div class="font-sans-poppins text-[9.5px] uppercase tracking-widest font-bold text-slate-800 leading-tight">
+              INSTITUT PERTANIAN STIPER
+            </div>
+            <div class="font-serif-lora text-[23px] sm:text-[25px] font-bold text-[#1d7350] tracking-wide leading-none my-0.5">
+              INSTIPER
+            </div>
+            <div class="font-sans-poppins text-[9px] uppercase tracking-wider font-bold text-slate-800 leading-tight">
+              YOGYAKARTA
+            </div>
+          </div>
+        </div>
+
+        <!-- TITLE BLOCK -->
+        <div class="text-left mb-4">
+          <h2 class="font-serif-lora text-2xl font-bold text-[#112538] leading-tight">SIGN IN</h2>
+          <p class="font-sans-poppins text-[12.5px] text-[#718296] mt-0.5">Silahkan Sign In Untuk Mengakses Sistem</p>
+        </div>
+
+        <!-- 2 TABS SELECTOR: PRAKTIKAN & CO.ASS (KOORDINATOR SUDAH DIHAPUS) -->
+        <div class="instiper-tabs-container grid grid-cols-2 gap-1 mb-5">
+          <button id="tab-btn-praktikan" type="button" class="instiper-tab-btn active cursor-pointer">Praktikan</button>
+          <button id="tab-btn-coass" type="button" class="instiper-tab-btn cursor-pointer">Co.Ass</button>
+        </div>
+
+        <!-- FORM 1: LOGIN PRAKTIKAN -->
+        <form id="form-praktikan" class="space-y-3.5">
+          <div>
+            <label class="block font-sans-poppins text-[12px] font-semibold text-[#2d3d52] mb-1.5">Nama Lengkap Praktikan</label>
+            <input type="text" id="praktikan-nama" placeholder="Masukkan nama Anda (bebas)" autocomplete="name"
+              class="instiper-input">
+          </div>
+
+          <div>
+            <label class="block font-sans-poppins text-[12px] font-semibold text-[#2d3d52] mb-1.5">Nomor Induk Mahasiswa (NIM)</label>
+            <div class="relative">
+              <input type="text" id="praktikan-nim" placeholder="Contoh: 25/25244001/TP (opsional)" autocomplete="off"
+                class="instiper-input pr-10 font-mono tracking-wider">
+              <button type="button" id="btn-toggle-nim" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-sans-poppins text-[12px] font-semibold text-[#2d3d52] mb-1.5">Minat / Jurusan / Kelas</label>
+            <input type="text" id="praktikan-minat" placeholder="Contoh: Teknik Pertanian / SMOP (opsional)"
+              class="instiper-input">
+          </div>
+
+          <div class="pt-1">
+            <button id="btn-submit-praktikan" type="submit" class="instiper-btn-primary cursor-pointer">
+              <span>Sign In (Mulai Ujian) ➜</span>
+            </button>
+          </div>
+
+          <p class="font-sans-poppins text-[11px] text-[#849bb0] text-center pt-1 leading-relaxed">
+            Siapa saja bisa masuk & mengerjakan ujian. Cukup isi nama Anda lalu klik <b>Sign In</b>.
+          </p>
+        </form>
+
+        <!-- FORM 2: LOGIN CO.ASS (BISA MASUK DENGAN KLIK LANGSUNG) -->
+        <form id="form-coass" class="hidden space-y-3.5">
+          <div>
+            <label class="block font-sans-poppins text-[12px] font-semibold text-[#2d3d52] mb-1.5">Username Co.Ass</label>
+            <input type="text" id="coass-user" placeholder="bangmail (atau bebas)" autocomplete="username"
+              value="bangmail" class="instiper-input">
+          </div>
+
+          <div>
+            <label class="block font-sans-poppins text-[12px] font-semibold text-[#2d3d52] mb-1.5">Password</label>
+            <input type="password" id="coass-pass" placeholder="coass2026.354 (atau bebas)" autocomplete="current-password"
+              value="coass2026.354" class="instiper-input">
+          </div>
+
+          <div class="pt-1">
+            <button id="btn-submit-coass" type="submit" class="instiper-btn-primary cursor-pointer">
+              <span>Sign In Co.Ass (Buka Dashboard) ➜</span>
+            </button>
+          </div>
+
+          <p class="font-sans-poppins text-[11px] text-[#849bb0] text-center pt-1 leading-relaxed">
+            Portal Asisten Praktikum: Klik tombol di atas untuk membuka rekap nilai & data Google Drive.
+          </p>
+        </form>
+
+        <!-- FOOTER STATUS DRIVE PERSIS SEPERTI GAMBAR -->
+        <div class="flex items-center justify-between pt-5 mt-5 border-t border-slate-100 text-[11.5px] text-[#526678]">
+          <div class="flex items-center gap-1.5 font-medium">
+            <span id="drive-dot" class="w-2 h-2 rounded-full bg-[#4ea78e] inline-block"></span>
+            <span id="drive-status-label">Drive Terhubung</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="openDriveModal()" class="hover:text-[#4ea78e] flex items-center gap-1 font-medium transition-colors cursor-pointer">
+              <span>🔗</span> <span>Hubungkan</span>
+            </button>
+            <button type="button" onclick="refreshDriveStatus()" class="hover:text-[#4ea78e] flex items-center gap-1 font-medium transition-colors cursor-pointer">
+              <span>🔄</span> <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. SCREEN: COUNTDOWN (3 - 2 - 1 - MULAI) -->
+    <section id="screen-countdown" class="hidden screen-fade w-full max-w-sm mx-auto text-center my-auto py-12">
+      <div class="instiper-card p-8 sm:p-10 flex flex-col items-center justify-center min-h-[300px]">
+        <img src="logo-instiper.png" alt="INSTIPER" class="w-12 h-12 mb-3 object-contain">
+        <span class="font-sans-poppins text-xs uppercase tracking-widest text-[#4ea78e] font-extrabold mb-3">Bersiap Menjawab...</span>
+        <div id="countdown-number" class="countdown-overlay font-serif-lora text-7xl font-bold text-[#1d7350] mb-4 select-none">
+          3
+        </div>
+        <p class="font-sans-poppins text-slate-500 text-xs">30 Soal • 15 detik per nomor • Otomatis tersimpan</p>
+      </div>
+    </section>
+
+    <!-- 3. SCREEN: QUIZ ARENA (30 SOAL RESMI SESUAI DOKUMEN, 15 DETIK / SOAL) -->
+    <section id="screen-quiz" class="hidden screen-fade w-full max-w-2xl mx-auto my-auto flex flex-col gap-4">
+      
+      <!-- Top Info & Timer Bar -->
+      <div class="instiper-card p-4 sm:p-5 flex flex-col gap-3">
+        <div class="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-600">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-[#1d7350] font-bold font-serif-lora text-sm">
+              Soal <span id="current-q-number" class="text-base text-emerald-950">1</span> / <span id="total-q-number">30</span>
+            </span>
+            <span id="quiz-badge-student" class="hidden sm:inline-block font-medium text-slate-500 truncate max-w-[220px]"></span>
+          </div>
+
+          <!-- Circular + Number Timer -->
+          <div class="flex items-center gap-3">
+            <div class="relative w-11 h-11 flex items-center justify-center">
+              <svg class="timer-svg w-11 h-11" viewBox="0 0 80 80">
+                <circle class="timer-circle-bg" cx="40" cy="40" r="36" stroke-width="7" fill="none" />
+                <circle id="timer-circle-progress" class="timer-circle-progress" cx="40" cy="40" r="36" stroke-width="7" fill="none" />
+              </svg>
+              <span id="timer-number" class="font-serif-lora absolute text-lg font-bold text-slate-800">15</span>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Sisa Waktu</div>
+              <div class="text-xs font-bold text-slate-700">15 Detik</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overall Progress -->
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+          <div id="quiz-progress-fill" class="bg-[#4ea78e] h-full rounded-full transition-all duration-300" style="width: 3.33%;"></div>
+        </div>
+        <!-- 15s Timer Linear Progress -->
+        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+          <div id="timer-bar-fill" class="timer-bar-fill bg-emerald-500 h-full rounded-full" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="instiper-card p-5 sm:p-7">
+        <div class="mb-5">
+          <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-[#1d7350] bg-emerald-50 px-2.5 py-1 rounded-md mb-2">
+            Pertanyaan Praktikum Teknologi dan Mekanisasi
+          </span>
+          <h3 id="question-text" class="font-serif-lora text-base sm:text-lg font-bold text-slate-900 leading-relaxed min-h-[50px]">
+            Memuat soal ujian praktikum...
+          </h3>
+        </div>
+
+        <!-- Options Container (A, B, C, D) -->
+        <div id="options-container" class="space-y-3 mb-6"></div>
+
+        <!-- Footer Action -->
+        <div class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100">
+          <div id="quiz-status-message" class="text-xs font-medium text-slate-500 text-center sm:text-left min-h-[20px]"></div>
+          <button id="btn-confirm-next" type="button"
+            class="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#4ea78e] hover:bg-[#40927c] text-white font-semibold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span>Kunci & Lanjut ➜</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="text-center text-xs text-white/90 font-medium drop-shadow">
+        ⏱️ Jawaban otomatis tersimpan jika 15 detik habis & tidak bisa diulang kembali.
+      </p>
+    </section>
+
+    <!-- 4. SCREEN: HASIL PRAKTIKAN -->
+    <section id="screen-result" class="hidden screen-fade w-full max-w-lg mx-auto my-auto">
+      <div class="instiper-card p-6 sm:p-8 relative overflow-hidden">
+        
+        <div class="text-center mb-5">
+          <img src="logo-instiper.png" alt="INSTIPER" class="w-14 h-14 mx-auto mb-2 object-contain">
+          <h2 class="font-serif-lora text-2xl font-bold text-slate-900">Ujian Praktikum Selesai!</h2>
+          <p id="result-student-name" class="font-sans-poppins text-base font-bold text-[#1d7350] mt-1">Nama Praktikan</p>
+          <p id="result-student-meta" class="font-sans-poppins text-xs text-slate-500">NIM / Minat</p>
+          <div class="mt-2.5">
+            <span id="result-score-badge" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              STATUS: LULUS
+            </span>
+          </div>
+        </div>
+
+        <!-- Score Display -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 text-center mb-5">
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Nilai Akhir Praktikum</div>
+          <div class="flex items-center justify-center gap-1">
+            <span id="result-score-number" class="font-serif-lora text-6xl font-bold text-[#1d7350]">85</span>
+            <span class="text-xl font-bold text-slate-400 self-end mb-2">/ 100</span>
+          </div>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="grid grid-cols-3 gap-2.5 mb-5 text-center">
+          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+            <div id="result-count-correct" class="font-serif-lora text-lg font-bold text-emerald-800">25</div>
+            <div class="text-[10px] font-semibold uppercase text-emerald-600">Benar</div>
+          </div>
+          <div class="p-3 rounded-xl bg-rose-50 border border-rose-100">
+            <div id="result-count-wrong" class="font-serif-lora text-lg font-bold text-rose-800">5</div>
+            <div class="text-[10px] font-semibold uppercase text-rose-600">Salah</div>
+          </div>
+          <div class="p-3 rounded-xl bg-amber-50 border border-amber-100">
+            <div id="result-count-timeout" class="font-serif-lora text-lg font-bold text-amber-800">0</div>
+            <div class="text-[10px] font-semibold uppercase text-amber-600">Timeout</div>
+          </div>
+        </div>
+
+        <!-- Drive Sync Status Box -->
+        <div id="result-drive-sync-status" class="mb-5"></div>
+
+        <div class="space-y-2.5">
+          <button id="btn-send-whatsapp" type="button"
+            class="w-full py-3.5 px-5 rounded-xl bg-[#25D366] hover:bg-[#1ebd5b] text-white font-semibold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.302c-.087.088-.177.185-.077.357.101.172.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.071.376-.043.101-.116.433-.506.549-.68.116-.173.231-.144.39-.086s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.159.57 4.185 1.564 5.938l-1.564 5.719 5.866-1.539c1.677.915 3.593 1.439 5.634 1.439 6.627 0 12-5.373 12-12 0-6.627-5.373-12-12-12z"/></svg>
+            <span>Kirim Nilai ke WhatsApp Co.Ass</span>
+          </button>
+          <button id="btn-restart-exam" type="button"
+            class="w-full py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-50 font-medium text-xs text-slate-700 transition-colors">
+            Kembali ke Halaman Login
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. SCREEN: DASHBOARD CO.ASS (PORTAL BANG MAIL) -->
+    <section id="screen-coass-dashboard" class="hidden screen-fade w-full max-w-5xl mx-auto flex flex-col gap-5">
+      
+      <!-- Top Welcome Bar -->
+      <div class="instiper-card p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <img src="logo-instiper.png" alt="INSTIPER" class="w-12 h-12 object-contain shrink-0">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="font-serif-lora text-xl font-bold text-slate-900">Halo, Bang Mail!</h2>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-[#1d7350] text-[10.5px] font-bold uppercase">Co.Ass Aktif</span>
+            </div>
+            <p class="font-sans-poppins text-xs text-slate-500">Dashboard Rekap Nilai Praktikan & Google Drive Spreadsheet</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button id="btn-open-drive-modal" type="button" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-[#1d7350] font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors">
+            <span>📁</span> <span>Google Drive</span>
+          </button>
+          <button id="btn-coass-logout" type="button" class="px-4 py-2 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors">
+            <span>🚪</span> <span>Keluar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="instiper-card p-4 text-center">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Total Peserta</div>
+          <div id="stat-total-peserta" class="font-serif-lora text-2xl font-bold text-slate-900">0</div>
+        </div>
+        <div class="instiper-card p-4 text-center">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Rata-rata Nilai</div>
+          <div id="stat-avg-nilai" class="font-serif-lora text-2xl font-bold text-[#1d7350]">0</div>
+        </div>
+        <div class="instiper-card p-4 text-center">
+          <div class="text-[11px] font-semibold text-emerald-600 uppercase tracking-wider mb-0.5">Lulus (≥70)</div>
+          <div id="stat-total-lulus" class="font-serif-lora text-2xl font-bold text-emerald-700">0</div>
+        </div>
+        <div class="instiper-card p-4 text-center">
+          <div class="text-[11px] font-semibold text-rose-600 uppercase tracking-wider mb-0.5">Remedial</div>
+          <div id="stat-total-remedial" class="font-serif-lora text-2xl font-bold text-rose-700">0</div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+      <div class="instiper-card p-5 sm:p-6 space-y-4">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="font-serif-lora font-bold text-slate-900 text-base sm:text-lg flex items-center gap-2">
+              <span>📊</span>
+              <span>Rekap Nilai Praktikan (30 Soal / 15 Detik)</span>
+            </h3>
+            <p class="font-sans-poppins text-xs text-slate-500">Nilai otomatis tersimpan dari ujian 30 butir soal para praktikan.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Segarkan Data Real-time -->
+            <button id="btn-refresh-coass" type="button"
+              class="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-[#1d7350] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer">
+              <span id="refresh-coass-icon" class="inline-block">🔄</span>
+              <span>Segarkan Data</span>
+            </button>
+            <!-- Unduh Excel Asli -->
+            <button id="btn-export-excel" type="button"
+              class="px-4 py-2 rounded-xl bg-[#1d7350] hover:bg-[#165a3e] text-white font-semibold text-xs shadow-md shadow-emerald-900/10 flex items-center gap-2 transition-all cursor-pointer">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>
+              <span>Unduh File Excel (.xlsx)</span>
+            </button>
+            <button id="btn-export-csv" type="button" class="px-3 py-2 rounded-xl border border-slate-300 hover:bg-slate-50 font-semibold text-xs text-slate-700">
+              CSV
+            </button>
+            <button id="btn-clear-results" type="button" class="px-3 py-2 rounded-xl border border-slate-200 text-slate-400 hover:text-rose-600 text-xs font-semibold" title="Kosongkan Riwayat">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Sync Banner -->
+        <div id="coass-sync-banner" class="hidden p-3 rounded-xl text-xs flex items-center justify-between transition-all"></div>
+
+        <!-- Filter -->
+        <div>
+          <input type="text" id="coass-search-input" placeholder="🔍 Cari nama praktikan, NIM, atau minat..."
+            class="instiper-input text-xs sm:text-sm">
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-left border-collapse min-w-[700px]">
+            <thead>
+              <tr class="bg-slate-50 text-[11px] uppercase tracking-wider font-bold text-slate-600 border-b border-slate-200">
+                <th class="p-3 text-center w-12">No</th>
+                <th class="p-3">Waktu Ujian</th>
+                <th class="p-3">NIM</th>
+                <th class="p-3">Nama Praktikan</th>
+                <th class="p-3">Minat</th>
+                <th class="p-3 text-center">Nilai</th>
+                <th class="p-3 text-center">Benar</th>
+                <th class="p-3 text-center">Salah</th>
+                <th class="p-3 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="coass-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MODAL: GOOGLE DRIVE / SPREADSHEET -->
+  <div id="modal-google-drive" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="instiper-card max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📁</span>
+          <h3 class="font-serif-lora font-bold text-slate-800 text-base sm:text-lg">Integrasi Google Drive / Spreadsheet</h3>
+        </div>
+        <button type="button" onclick="closeDriveModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold">✕</button>
+      </div>
+
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1 text-xs sm:text-sm text-slate-700 leading-relaxed font-sans-poppins">
+        <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2">
+          <div class="font-bold text-[#1d7350] text-xs sm:text-sm flex items-center gap-1.5">
+            <span>💡</span>
+            <span>Cara Menghubungkan ke Google Spreadsheet Anda:</span>
+          </div>
+          <ol class="list-decimal list-inside space-y-1 text-xs text-slate-800">
+            <li>Buka <b>Google Drive</b> (drive.google.com), buat file <b>Google Spreadsheet</b> baru.</li>
+            <li>Klik menu <b>Ekstensi</b> &rarr; <b>Apps Script</b>.</li>
+            <li>Hapus kode bawaan di editor Apps Script, lalu klik tombol di bawah untuk menyalin kode script terbaru.</li>
+            <li>Tempel kode &rarr; Simpan &rarr; Klik tombol biru <b>Terapkan (Deploy)</b> &rarr; <b>Penerapan baru (New deployment)</b>.</li>
+            <li>Pada ikon gerigi pilih <b>Aplikasi Web (Web app)</b>.</li>
+            <li><b>SANGAT PENTING:</b> Pada kolom <i>"Siapa yang memiliki akses" (Who has access)</i>, WAJIB pilih <b>"Siapa saja" (Anyone)</b> agar hasil jawaban praktikan langsung masuk tanpa terhalang izin akun!</li>
+            <li>Klik <b>Terapkan</b> &rarr; Beri Izin Akun &rarr; Salin <b>URL Aplikasi Web</b> (berakhiran <code>/exec</code>) &rarr; Tempelkan pada kolom di bawah.</li>
+          </ol>
+          <button type="button" onclick="copyAppsScriptCode()" class="mt-1 px-3.5 py-2 rounded-lg bg-[#1d7350] hover:bg-[#165a3e] text-white font-semibold text-xs flex items-center gap-1.5 cursor-pointer">
+            <span>📋</span>
+            <span>Salin Kode Google Apps Script Terbaru (2 Sheet: Rekap & Detail Jawaban)</span>
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-1">
+          <div class="font-bold flex items-center gap-1.5">
+            <span>⚠️</span>
+            <span>Tips Mengatasi Error "Anda Memerlukan Akses / Access Denied" dari Google:</span>
+          </div>
+          <p class="text-[11px] leading-relaxed">
+            Jika saat uji coba muncul pesan butuh izin akses: Di Google Spreadsheet Anda &rarr; Ekstensi &rarr; Apps Script &rarr; Klik tombol biru <b>Kelola Penerapan</b> (Manage deployments) &rarr; Klik Ikon Pensil (Edit) &rarr; Pilih <b>Versi Baru</b> &rarr; Pastikan <b>Siapa yang memiliki akses</b> diubah menjadi <b>"Siapa saja" (Anyone)</b> &rarr; Klik Simpan / Terapkan.
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-xs text-slate-700 mb-1.5">URL Webhook Google Apps Script Anda :</label>
+          <input type="url" id="input-google-sheet-url" placeholder="https://script.google.com/macros/s/.../exec"
+            class="instiper-input font-mono text-xs">
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <button type="button" onclick="saveGoogleSheetUrl()" class="px-5 py-2.5 rounded-xl bg-[#4ea78e] hover:bg-[#40927c] text-white font-semibold text-xs shadow-md">
+            💾 Simpan URL
+          </button>
+          <button type="button" onclick="testGoogleDriveWebhook()" class="px-4 py-2.5 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[#1d7350] font-semibold text-xs">
+            🧪 Kirim Baris Uji Coba ke Drive
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+        <button type="button" onclick="closeDriveModal()" class="px-5 py-2 rounded-xl bg-slate-800 text-white font-semibold text-xs">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
